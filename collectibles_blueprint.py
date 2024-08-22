@@ -9,6 +9,24 @@ from auth_middleware import token_required
 collectibles_blueprint = Blueprint('collectibles_blueprint', __name__)
 
 
+
+@collectibles_blueprint.route('/profiles/<int:profile_id>/collectibles', methods=['GET'])
+def profiles_collectibles_index(profile_id):
+    try:
+        connection = get_db_connection()
+        cursor = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        cursor.execute("""
+                       SELECT username, name, image, rating, count, condition, collectibles.id as id  FROM users
+                       RIGHT JOIN collectibles ON collectibles.user_id = users.id
+                       WHERE users.profile_id = %s;
+                       """, (profile_id,))
+        collectibles = cursor.fetchall()
+        connection.commit()
+        connection.close()
+        return jsonify(collectibles), 200
+    except Exception as error:
+        return jsonify({"error": str(error)}), 500
+
 @collectibles_blueprint.route('/collectibles', methods=['GET'])
 @token_required
 def collectibles_index():
@@ -19,7 +37,6 @@ def collectibles_index():
                        SELECT * FROM collectibles WHERE user_id = %s;
                        """, (g.user['id'],))
         collectibles = cursor.fetchall()
-        print(collectibles)
         connection.commit()
         connection.close()
         return jsonify(collectibles), 200
@@ -33,7 +50,6 @@ def create_collectible():
     try:
         new_collectible = request.json
         new_collectible["user_id"] = g.user["id"]
-        print(new_collectible)
         connection = get_db_connection()
         cursor = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         cursor.execute("""
@@ -53,7 +69,6 @@ def create_collectible():
 
 @collectibles_blueprint.route('/collectibles/<collectible_id>', methods=['GET'])
 def show_collectible(collectible_id):
-    print(collectible_id)
     try:
         connection = get_db_connection()
         cursor = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)

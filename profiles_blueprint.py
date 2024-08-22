@@ -18,7 +18,6 @@ def profiles_index():
                        SELECT * FROM profiles;
                        """)
         profiles = cursor.fetchall()
-        print(profiles)
         connection.commit()
         connection.close()
         return jsonify(profiles), 200
@@ -32,7 +31,6 @@ def create_profile():
     try:
         new_profile = request.json
         new_profile["user_id"] = g.user["id"]
-        print(new_profile)
         connection = get_db_connection()
         cursor = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         cursor.execute("""
@@ -58,7 +56,6 @@ def create_profile():
 
 @profiles_blueprint.route('/profiles/<profile_id>', methods=['GET'])
 def show_profile(profile_id):
-    print(profile_id)
     try:
         connection = get_db_connection()
         cursor = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
@@ -122,7 +119,6 @@ def delete_profile(profile_id):
         connection.commit()
         cursor.execute("UPDATE users SET profile_id = null WHERE users.id = profile_to_delete['user_id]")
         connection.close()
-        print('Deleted profile',profile_to_delete)
         return jsonify(profile_to_delete), 200
     except Exception as error:
         return jsonify({"error": str(error)}), 500

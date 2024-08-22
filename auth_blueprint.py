@@ -33,7 +33,6 @@ def signup():
 
 @authentication_blueprint.route('/auth/signin', methods=['POST'])
 def signin():
-        print(request.get_json())
         try:
             if request.headers['Content-Type'] == 'application/json':
                 sign_in_form_data = request.get_json()
