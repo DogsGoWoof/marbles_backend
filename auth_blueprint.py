@@ -53,7 +53,7 @@ def signin():
             if not password_is_valid:
                 return jsonify({"error": "Invalid credentials."}), 401
             
-            token = jwt.encode({"username": existing_user["username"], "id": existing_user["id"]}, os.getenv('JWT_SECRET'))
+            token = jwt.encode({"username": existing_user["username"], "id": existing_user["id"], "profile_id": existing_user["profile_id"]}, os.getenv('JWT_SECRET'))
             
             return jsonify({"token": token}), 201
         except Exception as error:

@@ -12,7 +12,6 @@ collectibles_blueprint = Blueprint('collectibles_blueprint', __name__)
 @collectibles_blueprint.route('/collectibles', methods=['GET'])
 @token_required
 def collectibles_index():
-    print(g.user['id'])
     try:
         connection = get_db_connection()
         cursor = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
