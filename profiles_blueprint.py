@@ -93,7 +93,7 @@ def update_profile(profile_id):
         if profile_to_update["user_id"] is not g.user["id"]:
             return jsonify({"error": "Unuser_idized"}), 401
         cursor.execute("""
-                       UPDATE profiles SET name = %s, image = %s, collection = %s, is_private = %s, condition = %s WHERE profiles.id = %s RETURNING *
+                       UPDATE profiles SET name = %s, image = %s, collection = %s, is_private = %s WHERE profiles.id = %s RETURNING *
                        """,
                        (updated_profile_data["name"], updated_profile_data["image"], updated_profile_data["collection"], updated_profile_data["is_private"], profile_id)
                         )
@@ -122,6 +122,7 @@ def delete_profile(profile_id):
         connection.commit()
         cursor.execute("UPDATE users SET profile_id = null WHERE users.id = profile_to_delete['user_id]")
         connection.close()
+        print('Deleted profile',profile_to_delete)
         return jsonify(profile_to_delete), 200
     except Exception as error:
         return jsonify({"error": str(error)}), 500
