@@ -34,19 +34,22 @@ def create_profile():
         connection = get_db_connection()
         cursor = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         cursor.execute("""
-                        INSERT INTO profiles (user_id, name, image, collection, is_private)
-                        VALUES (%s, %s, %s, %s, %s)
+                        INSERT INTO profiles (user_id, name, image, collection, about, favourite, is_private)
+                        VALUES (%s, %s, %s, %s, %s, %s, %s)
                         RETURNING *
                         """,
-                        (new_profile['user_id'], new_profile['name'], new_profile['image'], new_profile['collection'], new_profile['is_private'])
+                        (new_profile['user_id'], new_profile['name'], new_profile['image'], new_profile['collection'], new_profile['about'], new_profile['favourite'], new_profile['is_private'])
         )
         created_profile = cursor.fetchone()
         connection.commit()
+        print(created_profile)
         cursor.execute("""
                         UPDATE users SET profile_id = %s WHERE users.id = %s
                        """,
                        (created_profile['id'], g.user['id'])
                        )
+        
+        print(created_profile)
         connection.commit()
         connection.close()
         return jsonify(created_profile), 201
@@ -90,9 +93,9 @@ def update_profile(profile_id):
         if profile_to_update["user_id"] is not g.user["id"]:
             return jsonify({"error": "Unuser_idized"}), 401
         cursor.execute("""
-                       UPDATE profiles SET name = %s, image = %s, collection = %s, is_private = %s WHERE profiles.id = %s RETURNING *
+                       UPDATE profiles SET name = %s, image = %s, collection = %s, about = %s, favourite = %s, is_private = %s WHERE profiles.id = %s RETURNING *
                        """,
-                       (updated_profile_data["name"], updated_profile_data["image"], updated_profile_data["collection"], updated_profile_data["is_private"], profile_id)
+                       (updated_profile_data["name"], updated_profile_data["image"], updated_profile_data["collection"], updated_profile_data["about"], updated_profile_data["favourite"], updated_profile_data["is_private"], profile_id)
                         )
         updated_profile = cursor.fetchone()
         connection.commit()
