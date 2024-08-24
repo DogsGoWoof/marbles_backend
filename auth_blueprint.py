@@ -40,7 +40,6 @@ def signin():
                 sign_in_form_data = request.form.to_dict()
 
             connection = get_db_connection()
-
             cursor = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
             cursor.execute("SELECT * FROM users WHERE username = %s;", (sign_in_form_data["username"],))
             existing_user = cursor.fetchone()
@@ -57,3 +56,24 @@ def signin():
             return jsonify({"token": token}), 201
         except Exception as error:
             return jsonify({"error": "Invalid credentials."}), 401
+        
+
+@authentication_blueprint.route('/auth/user-profile', methods=['GET'])
+def user_profile():
+        authorization_header = request.headers.get('Authorization')
+        if authorization_header is None:
+            return jsonify({"error": "Unauthorized"}), 401
+        try:
+            token = authorization_header.split(' ')[1]
+            token_data = jwt.decode(token, os.getenv('JWT_SECRET'), algorithms=["HS256"])
+            connection = get_db_connection()
+            cursor = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+            cursor.execute("SELECT * FROM users WHERE id = %s;", (token_data['id'],),)
+            existing_user = cursor.fetchone()
+            connection.commit()
+            connection.close()
+            token = jwt.encode({"username": existing_user["username"], "id": existing_user["id"], "profile_id": existing_user["profile_id"]}, os.getenv('JWT_SECRET'))
+            print(request.headers.get('Authorization'))
+            return jsonify({"token": token}), 201
+        except Exception as error:
+            return jsonify({str(error)}), 400
