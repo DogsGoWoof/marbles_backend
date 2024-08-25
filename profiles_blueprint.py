@@ -58,6 +58,7 @@ def create_profile():
     
 
 @profiles_blueprint.route('/profiles/<profile_id>', methods=['GET'])
+@token_required
 def show_profile(profile_id):
     try:
         connection = get_db_connection()
