@@ -10,6 +10,7 @@ pyjwt = "*"
 python-dotenv = "*"
 psycopg2-binary = "*"
 bcrypt = "*"
+gunicorn = "*"
 
 [dev-packages]
 

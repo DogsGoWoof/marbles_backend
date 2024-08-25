@@ -20,11 +20,5 @@ app.register_blueprint(collectibles_blueprint)
 app.register_blueprint(profiles_blueprint)
 CORS(app)
 
-
-@app.route('/hello')
-def home():
-    return '<h1>Hello, World! - from Flask</h1>'
-
-
 if __name__ == '__main__':
     app.run()

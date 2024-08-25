@@ -1,12 +1,14 @@
 # marbles
 
 ## Getting Started
+[Front End README](https://github.com/DogsGoWoof/marbles-frontend/blob/main/marbles/README.md)
 
 ## Attributions  
 
 
 ## Technologies Used
-
+- Python
+    - Flask
 
 ### References  
 SQL FOREIGN KEY  
