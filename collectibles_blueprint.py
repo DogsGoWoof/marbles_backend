@@ -1,5 +1,3 @@
-import os
-import jwt
 from flask import Blueprint, jsonify, request, g
 from db import get_db_connection
 import psycopg2, psycopg2.extras
@@ -7,7 +5,6 @@ import psycopg2, psycopg2.extras
 from auth_middleware import token_required
 
 collectibles_blueprint = Blueprint('collectibles_blueprint', __name__)
-
 
 
 @collectibles_blueprint.route('/profiles/<int:profile_id>/collectibles', methods=['GET'])

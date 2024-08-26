@@ -1,5 +1,3 @@
-import os
-import jwt
 from flask import Blueprint, jsonify, request, g
 from db import get_db_connection
 import psycopg2, psycopg2.extras
@@ -42,14 +40,11 @@ def create_profile():
         )
         created_profile = cursor.fetchone()
         connection.commit()
-        print(created_profile)
         cursor.execute("""
                         UPDATE users SET profile_id = %s WHERE users.id = %s
                        """,
                        (created_profile['id'], g.user['id'])
                        )
-        
-        print(created_profile)
         connection.commit()
         connection.close()
         return jsonify(created_profile), 201
