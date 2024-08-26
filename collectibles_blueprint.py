@@ -13,8 +13,9 @@ def profiles_collectibles_index(profile_id):
         connection = get_db_connection()
         cursor = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         cursor.execute("""
-                       SELECT username, name, image, rating, count, condition, collectibles.id as id  FROM users
+                       SELECT username, collectibles.name as name, collectibles.image as image, rating, count, condition, collectibles.id as id, profiles.is_private as is_private FROM users
                        RIGHT JOIN collectibles ON collectibles.user_id = users.id
+                       RIGHT JOIN profiles ON profiles.user_id = users.id
                        WHERE users.profile_id = %s;
                        """, (profile_id,))
         collectibles = cursor.fetchall()
