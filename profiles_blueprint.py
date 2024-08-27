@@ -66,6 +66,8 @@ def show_profile(profile_id):
             (profile_id,)
             )
         profile = cursor.fetchall()
+        if profile[0]['favourite'] == None:
+            profile[0]['favourite'] = 0
         if profile is not None :
             return jsonify(profile), 200
         else:
