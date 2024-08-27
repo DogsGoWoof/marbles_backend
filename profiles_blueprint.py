@@ -29,6 +29,8 @@ def create_profile():
     try:
         new_profile = request.json
         new_profile["user_id"] = g.user["id"]
+        if new_profile['favourite'] == 0:
+            new_profile['favourite'] = None
         connection = get_db_connection()
         cursor = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         cursor.execute("""

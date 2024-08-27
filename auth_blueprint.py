@@ -73,7 +73,6 @@ def user_profile():
             connection.commit()
             connection.close()
             token = jwt.encode({"username": existing_user["username"], "id": existing_user["id"], "profile_id": existing_user["profile_id"]}, os.getenv('JWT_SECRET'))
-            print(request.headers.get('Authorization'))
             return jsonify({"token": token}), 201
         except Exception as error:
             return jsonify({str(error)}), 400

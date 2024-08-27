@@ -2,7 +2,6 @@ from flask import Flask
 from flask_cors import CORS
 from dotenv import load_dotenv
 
-
 from auth_blueprint import authentication_blueprint
 from collectibles_blueprint import collectibles_blueprint
 from profiles_blueprint import profiles_blueprint
